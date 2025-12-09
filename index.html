@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Encrypt / Decrypt Message with Login</title>
+<style>
+    body { font-family: Arial; background:#f4f4f4; padding:20px; }
+    .box { background:white; padding:20px; border-radius:10px; width:350px; margin:auto; box-shadow:0 0 10px #aaa; }
+    input, textarea, button {
+        width:100%; padding:10px; margin-top:10px; border-radius:5px; border:1px solid #aaa;
+    }
+    button { background:blue; color:white; border:none; cursor:pointer; }
+    button:hover { opacity:0.8; }
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+</head>
+
+<body>
+
+<div class="box">
+    <h2>Encrypt / Decrypt Message with Login</h2>
+
+    <textarea id="message" placeholder="Enter your message"></textarea>
+    <input type="password" id="password" placeholder="Enter password">
+
+    <button onclick="encryptMsg()">Encrypt</button>
+    <textarea id="encrypted" placeholder="Encrypted result"></textarea>
+
+    <button onclick="decryptMsg()">Decrypt</button>
+    <textarea id="decrypted" placeholder="Decrypted result"></textarea>
+
+    <button onclick="loginCheck()">Login</button>
+</div>
+
+<script>
+function encryptMsg() {
+    let msg = document.getElementById("message").value;
+    let pwd = document.getElementById("password").value;
+
+    if(msg === "" || pwd === "") {
+        alert("Please enter message and password");
+        return;
+    }
+
+    let encrypted = CryptoJS.AES.encrypt(msg, pwd).toString();
+    document.getElementById("encrypted").value = encrypted;
+}
+
+function decryptMsg() {
+    let encryptedText = document.getElementById("encrypted").value;
+    let pwd = document.getElementById("password").value;
+
+    if(encryptedText === "" || pwd === "") {
+        alert("Please enter encrypted text and password");
+        return;
+    }
+
+    let bytes = CryptoJS.AES.decrypt(encryptedText, pwd);
+    let decrypted = bytes.toString(CryptoJS.enc.Utf8);
+
+    if(decrypted === "") {
+        alert("Wrong password or corrupted text");
+        return;
+    }
+
+    document.getElementById("decrypted").value = decrypted;
+}
+
+function loginCheck() {
+    let originalMsg = document.getElementById("message").value;
+    let decryptedMsg = document.getElementById("decrypted").value;
+
+    if(originalMsg === "" || decryptedMsg === "") {
+        alert("Please enter message and decrypt it first");
+        return;
+    }
+
+    if(originalMsg === decryptedMsg) {
+        // Redirect to shopping website
+        window.location.href = "https://www.amazon.com"; // Change this to your preferred shopping site
+    } else {
+        alert("Message and decrypted text do not match. Cannot login.");
+    }
+}
+</script>
+
+</body>
+</html>
